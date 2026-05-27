@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Portal - Dashboard Ujian Premium 2026</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style Injection for gradients & animations -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.6);
+        }
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        /* Loading Overlay Animation */
+        @keyframes fadeOut {
+            from { opacity: 1; pointer-events: auto; }
+            to { opacity: 0; pointer-events: none; }
+        }
+        .loading-finished {
+            animation: fadeOut 0.5s forwards;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-tr from-slate-50 via-indigo-50 to-blue-100 text-slate-800 dark:from-slate-950 dark:via-indigo-950 dark:to-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- LOADING SCREEN -->
+    <div id="loadingScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950 text-white transition-opacity duration-500">
+        <div class="relative flex items-center justify-center">
+            <div class="w-20 h-20 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+            <i class="fa-solid fa-graduation-cap text-2xl text-indigo-400 absolute"></i>
+        </div>
+        <h2 class="mt-6 text-xl font-bold tracking-wider animate-pulse text-indigo-300">EXAM PORTAL 2026</h2>
+        <p class="text-xs text-slate-400 mt-2">Mempersiapkan Lingkungan Ujian Terbaik...</p>
+    </div>
+
+    <!-- NOTIFICATION POPUP -->
+    <div id="notification" class="fixed top-5 right-5 z-50 transform translate-x-full transition-transform duration-300 ease-out flex items-center gap-3 p-4 rounded-xl shadow-2xl glass-card max-w-sm border-l-4 border-indigo-500">
+        <div id="notifIcon" class="text-indigo-500 text-xl">
+            <i class="fa-solid fa-circle-info"></i>
+        </div>
+        <div>
+            <h4 id="notifTitle" class="font-bold text-sm text-slate-900 dark:text-white">Notifikasi</h4>
+            <p id="notifMessage" class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">Pesan sistem diletakkan di sini.</p>
+        </div>
+        <button onclick="hideNotification()" class="ml-auto text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="appContainer" class="flex-1 flex flex-col">
+        
+        <!-- ==================== AUTHENTICATION SECTION (Login/Register) ==================== -->
+        <section id="authSection" class="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
+            <!-- Background Decorative Bubbles -->
+            <div class="absolute w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl -top-12 -left-12"></div>
+            <div class="absolute w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -bottom-12 -right-12"></div>
+
+            <div class="w-full max-w-lg glass-card rounded-2xl shadow-2xl p-8 relative z-10 border border-white/20 dark:border-slate-800">
+                <!-- Brand Title -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 mb-3">
+                        <i class="fa-solid fa-graduation-cap text-3xl"></i>
+                    </div>
+                    <h1 class="text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-indigo-400 bg-clip-text text-transparent">Exam Portal</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Sistem Evaluasi Akademik Berbasis Integritas Tinggi</p>
+                </div>
+
+                <!-- Tab Buttons -->
+                <div class="flex bg-slate-100 dark:bg-slate-900/60 p-1 rounded-xl mb-6">
+                    <button id="tabUserLogin" onclick="switchAuthTab('user-login')" class="flex-1 py-2.5 text-xs font-semibold rounded-lg transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm">
+                        <i class="fa-solid fa-user-graduate mr-1"></i> User Login
+                    </button>
+                    <button id="tabAdminLogin" onclick="switchAuthTab('admin-login')" class="flex-1 py-2.5 text-xs font-semibold rounded-lg transition-all duration-200 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                        <i class="fa-solid fa-user-shield mr-1"></i> Admin Login
+                    </button>
+                    <button id="tabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2.5 text-xs font-semibold rounded-lg transition-all duration-200 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                        <i class="fa-solid fa-user-plus mr-1"></i> Register
+                    </button>
+                </div>
+
+                <!-- 1. USER LOGIN CARD -->
+                <div id="formUserLogin" class="auth-card space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Masuk sebagai Siswa</h3>
+                    <form onsubmit="handleUserLogin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Alamat Email</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" id="loginUserEmail" required placeholder="nama@sekolah.sch.id" class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Kata Sandi</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" id="loginUserPassword" required placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                        </div>
+
+                        <!-- Face ID Verification Trigger -->
+                        <div class="p-3 bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/50 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-face-viewfinder text-indigo-500 text-lg"></i>
+                                    <div>
+                                        <h5 class="text-xs font-bold">Verifikasi Face ID</h5>
+                                        <p class="text-[10px] text-slate-500">Lakukan simulasi pemindaian wajah untuk login</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="startFaceIDScan('login')" class="text-xs bg-indigo-600 text-white font-semibold px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition">Scan Wajah</button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition shadow-lg shadow-indigo-500/20 text-sm">Masuk Portal Siswa</button>
+                    </form>
+                    
+                    <div class="relative flex py-2 items-center">
+                        <div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+                        <span class="flex-shrink mx-4 text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Atau masuk dengan</span>
+                        <div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+                    </div>
+                    <button onclick="handleGoogleOAuth('user')" class="w-full py-2.5 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl transition flex items-center justify-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.04c1.78 0 3.3.61 4.56 1.8l3.41-3.41C17.9 1.51 15.17 1 12 1 7.24 1 3.2 3.74 1.24 7.74l4.02 3.12C6.22 7.74 8.88 5.04 12 5.04z"/><path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.29 1.48-1.14 2.73-2.4 3.58l3.73 2.89c2.18-2.01 3.7-4.99 3.7-8.62z"/><path fill="#FBBC05" d="M5.26 14.14c-.24-.72-.38-1.5-.38-2.31s.14-1.59.38-2.31L1.24 6.4C.45 8.09 0 9.99 0 12s.45 3.91 1.24 5.6l4.02-3.46z"/><path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.73-2.89c-1.1.74-2.51 1.2-4.23 1.2-3.12 0-5.78-2.7-6.74-5.82L1.24 16.5C3.2 20.26 7.24 23 12 23z"/></svg>
+                        Google Account
+                    </button>
+                </div>
+
+                <!-- 2. ADMIN LOGIN CARD -->
+                <div id="formAdminLogin" class="auth-card space-y-4 hidden">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Masuk sebagai Admin</h3>
+                        <span class="text-[10px] bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Akses Khusus</span>
+                    </div>
+                    <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Username Admin</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-user-shield"></i></span>
+                                <input type="text" id="loginAdminUser" required placeholder="adminexam2026" class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <span class="text-[9px] text-slate-400 mt-1 block">Default: adminexam2026</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Password</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" id="loginAdminPassword" required placeholder="••••••••" class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <span class="text-[9px] text-slate-400 mt-1 block">Default: adminexam2026</span>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold rounded-xl transition shadow-lg text-sm">Masuk Portal Admin</button>
+                    </form>
+                    
+                    <div class="relative flex py-2 items-center">
+                        <div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+                        <span class="flex-shrink mx-4 text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Atau masuk dengan</span>
+                        <div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+                    </div>
+                    <button onclick="handleGoogleOAuth('admin')" class="w-full py-2.5 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl transition flex items-center justify-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.04c1.78 0 3.3.61 4.56 1.8l3.41-3.41C17.9 1.51 15.17 1 12 1 7.24 1 3.2 3.74 1.24 7.74l4.02 3.12C6.22 7.74 8.88 5.04 12 5.04z"/><path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.29 1.48-1.14 2.73-2.4 3.58l3.73 2.89c2.18-2.01 3.7-4.99 3.7-8.62z"/><path fill="#FBBC05" d="M5.26 14.14c-.24-.72-.38-1.5-.38-2.31s.14-1.59.38-2.31L1.24 6.4C.45 8.09 0 9.99 0 12s.45 3.91 1.24 5.6l4.02-3.46z"/><path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.73-2.89c-1.1.74-2.51 1.2-4.23 1.2-3.12 0-5.78-2.7-6.74-5.82L1.24 16.5C3.2 20.26 7.24 23 12 23z"/></svg>
+                        Google Admin Account
+                    </button>
+                </div>
+
+                <!-- 3. USER REGISTER CARD -->
+                <div id="formRegister" class="auth-card space-y-4 hidden">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Pendaftaran Siswa Baru</h3>
+                    <form onsubmit="handleUserRegister(event)" class="space-y-3">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Nama Lengkap</label>
+                                <input type="text" id="regFullName" required placeholder="Andi Saputra" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Kelas (SMP)</label>
+                                <select id="regClass" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 focus:outline-none">
+                                    <option value="VII-A">VII-A</option>
+                                    <option value="VII-B">VII-B</option>
+                                    <option value="VIII-A">VIII-A</option>
+                                    <option value="VIII-B">VIII-B</option>
+                                    <option value="IX-A">IX-A</option>
+                                    <option value="IX-B">IX-B</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Email</label>
+                            <input type="email" id="regEmail" required placeholder="andi@sekolah.sch.id" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 focus:outline-none">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Password</label>
+                                <input type="password" id="regPassword" required placeholder="••••••••" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Foto Profil</label>
+                                <input type="file" id="regProfileImage" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-600 dark:text-slate-400 mb-1">Bio Singkat</label>
+                            <textarea id="regBio" rows="2" placeholder="Tulis bio singkat Anda di sini..." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 focus:outline-none"></textarea>
+                        </div>
+
+                        <!-- Face ID Registration Trigger -->
+                        <div class="p-3 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-face-viewfinder text-emerald-500 text-lg"></i>
+                                    <div>
+                                        <h5 class="text-xs font-bold text-slate-900 dark:text-emerald-400">Registrasi Wajah</h5>
+                                        <p class="text-[10px] text-slate-500 dark:text-slate-400" id="faceIDRegStatus">Opsional untuk Login Cepat</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="startFaceIDScan('register')" class="text-xs bg-emerald-600 text-white font-semibold px-3 py-1.5 rounded-lg hover:bg-emerald-700 transition">Daftar Wajah</button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition shadow-lg shadow-emerald-500/20 text-xs">Daftar Akun Baru</button>
+                    </form>
+                    <div class="relative flex py-1 items-center">
+                        <div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+                        <span class="flex-shrink mx-4 text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Atau</span>
+                        <div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+                    </div>
+                    <button onclick="handleGoogleOAuth('user')" class="w-full py-2 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl transition flex items-center justify-center gap-2 text-[10px] font-bold text-slate-700 dark:text-slate-300">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.04c1.78 0 3.3.61 4.56 1.8l3.41-3.41C17.9 1.51 15.17 1 12 1 7.24 1 3.2 3.74 1.24 7.74l4.02 3.12C6.22 7.74 8.88 5.04 12 5.04z"/><path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.29 1.48-1.14 2.73-2.4 3.58l3.73 2.89c2.18-2.01 3.7-4.99 3.7-8.62z"/><path fill="#FBBC05" d="M5.26 14.14c-.24-.72-.38-1.5-.38-2.31s.14-1.59.38-2.31L1.24 6.4C.45 8.09 0 9.99 0 12s.45 3.91 1.24 5.6l4.02-3.46z"/><path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.73-2.89c-1.1.74-2.51 1.2-4.23 1.2-3.12 0-5.78-2.7-6.74-5.82L1.24 16.5C3.2 20.26 7.24 23 12 23z"/></svg>
+                        Hubungkan Google
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== MAIN PORTAL DASHBOARD SECTION ==================== -->
+        <section id="portalSection" class="hidden min-h-screen flex flex-col md:flex-row relative">
+            
+            <!-- SIDEBAR NAVIGATION -->
+            <aside id="sidebar" class="w-72 bg-slate-900 text-slate-100 flex-shrink-0 flex flex-col transition-all duration-300 z-30 fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0">
+                <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <span class="block font-black tracking-wide text-white text-base">EXAM PORTAL</span>
+                            <span class="block text-[10px] text-indigo-400 font-semibold uppercase tracking-widest">Premium Portal v2.6</span>
+                        </div>
+                    </div>
+                    <!-- Close button for responsive sidebar -->
+                    <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="flex-1 px-4 py-6 space-y-1.5">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/15">
+                        <i class="fa-solid fa-chart-line w-5 text-center text-base"></i> Dashboard Utama
+                    </button>
+                    <button onclick="switchView('ujian')" id="nav-ujian" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white">
+                        <i class="fa-solid fa-file-pen w-5 text-center text-base"></i> Ruang Ujian
+                    </button>
+                    <button onclick="switchView('jadwal')" id="nav-jadwal" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white">
+                        <i class="fa-solid fa-calendar-days w-5 text-center text-base"></i> Jadwal Ujian
+                    </button>
+                    <button onclick="switchView('riwayat')" id="nav-riwayat" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white">
+                        <i class="fa-solid fa-history w-5 text-center text-base"></i> Riwayat Nilai
+                    </button>
+                    <button onclick="openEditProfileModal()" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white">
+                        <i class="fa-solid fa-id-card w-5 text-center text-base"></i> Edit Profil
+                    </button>
+                </nav>
+
+                <!-- Sidebar Footer Status -->
+                <div class="p-4 border-t border-slate-800 bg-slate-950/40">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <img id="sidebarUserPhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&fit=crop" class="w-10 h-10 rounded-xl object-cover border-2 border-indigo-500" alt="Avatar">
+                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+                        </div>
+                        <div class="overflow-hidden">
+                            <h5 id="sidebarUserName" class="text-xs font-bold text-white truncate">Andi Saputra</h5>
+                            <span id="sidebarUserRole" class="block text-[10px] text-slate-400 truncate">Siswa • VII-A</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- DASHBOARD CONTENT WRAPPER -->
+            <main class="flex-1 flex flex-col min-w-0">
+                
+                <!-- TOP NAVIGATION BAR -->
+                <header class="h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between sticky top-0 z-20">
+                    <!-- Hamburger / Nav Title -->
+                    <div class="flex items-center gap-4">
+                        <button onclick="toggleSidebar()" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 md:hidden text-slate-700 dark:text-slate-300">
+                            <i class="fa-solid fa-bars text-xl"></i>
+                        </button>
+                        <div class="hidden sm:block">
+                            <h2 id="viewTitle" class="text-lg font-bold text-slate-900 dark:text-white">Dashboard Utama</h2>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Selamat datang kembali di Portal Premium</p>
+                        </div>
+                    </div>
+
+                    <!-- Actions Panel -->
+                    <div class="flex items-center gap-4">
+                        <!-- Theme Toggle Button -->
+                        <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:scale-105 transition">
+                            <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
+                        </button>
+
+                        <!-- Notification Bell Indicator -->
+                        <div class="relative">
+                            <button onclick="showSystemNotif()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                                <i class="fa-solid fa-bell"></i>
+                                <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
+                            </button>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="h-8 w-px bg-slate-200 dark:bg-slate-800"></div>
+
+                        <!-- User Profile Dropdown Triger -->
+                        <div class="relative" id="profileDropdownParent">
+                            <button onclick="toggleProfileDropdown()" class="flex items-center gap-2.5 focus:outline-none">
+                                <img id="headerUserPhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&fit=crop" class="w-9 h-9 rounded-xl object-cover border-2 border-indigo-500" alt="Avatar">
+                                <span id="headerUserName" class="hidden md:block text-xs font-bold text-slate-900 dark:text-white">Andi Saputra</span>
+                                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 hidden md:block"></i>
+                            </button>
+
+                            <!-- Dropdown Box -->
+                            <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 glass-card rounded-2xl shadow-xl py-2 border border-slate-200 dark:border-slate-800">
+                                <div class="px-4 py-2 border-b border-slate-200 dark:border-slate-800">
+                                    <p class="text-xs font-bold text-slate-900 dark:text-white" id="ddUserName">Andi Saputra</p>
+                                    <p class="text-[10px] text-slate-500 dark:text-slate-400" id="ddUserEmail">andi@sekolah.sch.id</p>
+                                </div>
+                                <button onclick="openEditProfileModal()" class="w-full text-left px-4 py-2.5 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2.5">
+                                    <i class="fa-solid fa-id-card text-slate-400"></i> Edit Profil Anda
+                                </button>
+                                <button onclick="handleLogout()" class="w-full text-left px-4 py-2.5 text-xs hover:bg-rose-50 dark:hover:bg-rose-950/20 text-rose-500 flex items-center gap-2.5">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Keluar Sistem
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- VIEWS AREA -->
+                <div class="flex-1 p-6 overflow-y-auto space-y-6">
+
+                    <!-- ==================== VIEW A: DASHBOARD UTAMA ==================== -->
+                    <div id="viewContainer-dashboard" class="dashboard-view space-y-6">
+                        
+                        <!-- Premium Welcome Banner -->
+                        <div class="bg-gradient-to-r from-indigo-600 via-indigo-700 to-indigo-900 text-white p-8 rounded-2xl shadow-xl relative overflow-hidden">
+                            <div class="absolute w-96 h-96 bg-white/5 rounded-full -top-12 -right-12"></div>
+                            <div class="relative z-10 max-w-xl">
+                                <span class="bg-white/20 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Integrity First</span>
+                                <h2 class="text-2xl sm:text-3xl font-black mt-3">Portal Ujian Mandiri Online Premium</h2>
+                                <p class="text-xs sm:text-sm text-indigo-100 mt-2 leading-relaxed">Selamat datang di sistem manajemen ujian interaktif berkelas dunia. Selesaikan ujian Anda secara jujur, efisien, dan raih prestasi gemilang!</p>
+                                <div class="mt-5 flex flex-wrap gap-3">
+                                    <button onclick="switchView('ujian')" class="bg-white text-indigo-900 text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-50 transition shadow-lg shadow-black/10">Mulai Ruang Ujian</button>
+                                    <button onclick="switchView('jadwal')" class="bg-indigo-500/30 text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-500/50 transition">Lihat Jadwal Terdekat</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statistics Counter Panels -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="glass-card p-5 rounded-2xl flex items-center gap-4 border border-slate-200 dark:border-slate-800">
+                                <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-book-open"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">Total Soal Tersedia</p>
+                                    <h4 class="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">50 Butir</h4>
+                                </div>
+                            </div>
+                            <div class="glass-card p-5 rounded-2xl flex items-center gap-4 border border-slate-200 dark:border-slate-800">
+                                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">Ujian Selesai</p>
+                                    <h4 id="statCompletedExams" class="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">0 Ujian</h4>
+                                </div>
+                            </div>
+                            <div class="glass-card p-5 rounded-2xl flex items-center gap-4 border border-slate-200 dark:border-slate-800">
+                                <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">Nilai Rata-rata</p>
+                                    <h4 id="statAverageScore" class="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">0.0</h4>
+                                </div>
+                            </div>
+                            <div class="glass-card p-5 rounded-2xl flex items-center gap-4 border border-slate-200 dark:border-slate-800">
+                                <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">Status Keamanan</p>
+                                    <h4 class="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">Sangat Aman</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Content Layout (Info + Side Widget) -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            
+                            <!-- Detailed Information (Student Profile Bio Card) -->
+                            <div class="lg:col-span-2 glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-6">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Identitas Siswa Terdaftar</h3>
+                                    <span class="text-[10px] bg-indigo-500/15 text-indigo-500 px-3 py-1 rounded-full font-bold">Aktif 2026</span>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row items-center gap-6 p-4 bg-slate-50 dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800/80">
+                                    <img id="profileDetailPhoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&fit=crop" class="w-24 h-24 rounded-2xl object-cover border-4 border-indigo-600 shadow-md" alt="Foto Profile">
+                                    <div class="flex-1 text-center sm:text-left space-y-2">
+                                        <h4 id="profileDetailName" class="text-lg font-extrabold text-slate-900 dark:text-white">Andi Saputra</h4>
+                                        <div class="flex flex-wrap justify-center sm:justify-start gap-2">
+                                            <span id="profileDetailClass" class="text-xs px-2.5 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 font-bold">Kelas VII-A</span>
+                                            <span id="profileDetailEmail" class="text-xs px-2.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">andi@sekolah.sch.id</span>
+                                        </div>
+                                        <p id="profileDetailBio" class="text-xs text-slate-500 dark:text-slate-400 italic">"Belajar sungguh-sungguh adalah investasi masa depan gemilang."</p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <h4 class="text-xs font-bold text-slate-900 dark:text-white">Panduan Penggunaan Portal Ujian:</h4>
+                                    <ul class="text-xs text-slate-500 dark:text-slate-400 space-y-2 list-disc list-inside">
+                                        <li>Persiapkan koneksi internet yang stabil sebelum memulai pengerjaan ujian.</li>
+                                        <li>Batas durasi ujian adalah 60 menit. Jawaban akan langsung dikirim secara otomatis jika waktu pengerjaan habis.</li>
+                                        <li>Simpan atau perbarui profil Anda pada menu profil di kanan atas atau tombol navigasi edit profil.</li>
+                                        <li>Dilarang keras melakukan kecurangan atau keluar dari browser selama ujian berlangsung.</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Fast Action & WhatsApp CS Widget -->
+                            <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-6">
+                                <div>
+                                    <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">Pemberitahuan Sistem</h3>
+                                    <div class="space-y-3">
+                                        <div class="p-3 bg-indigo-50/50 dark:bg-slate-900/60 border border-indigo-100 dark:border-slate-800 rounded-xl flex gap-3">
+                                            <i class="fa-solid fa-bullhorn text-indigo-600 text-sm mt-0.5"></i>
+                                            <div>
+                                                <h5 class="text-xs font-bold">Ujian Tengah Semester</h5>
+                                                <p class="text-[10px] text-slate-500 mt-0.5">Portal pengerjaan ujian UTS-UAS campuran SMP 2026 telah dibuka secara resmi.</p>
+                                            </div>
+                                        </div>
+                                        <div class="p-3 bg-teal-50/50 dark:bg-slate-900/60 border border-teal-100 dark:border-slate-800 rounded-xl flex gap-3">
+                                            <i class="fa-solid fa-circle-nodes text-teal-600 text-sm mt-0.5"></i>
+                                            <div>
+                                                <h5 class="text-xs font-bold">Fitur Face ID Aktif</h5>
+                                                <p class="text-[10px] text-slate-500 mt-0.5">Lakukan integrasi dan scan wajah Anda secara berkala demi menjamin integritas data.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gradient-to-tr from-amber-50 to-orange-100 dark:from-slate-900 dark:to-slate-800 p-4 rounded-xl border border-amber-200 dark:border-slate-800">
+                                    <div class="flex gap-3">
+                                        <i class="fa-solid fa-triangle-exclamation text-amber-500 text-lg mt-0.5"></i>
+                                        <div>
+                                            <h5 class="text-xs font-bold text-slate-900 dark:text-amber-500">Penting:</h5>
+                                            <p class="text-[10px] text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">Nilai ujian tidak dapat diulang. Pastikan Anda menyelesaikan sesi dengan teliti dan penuh fokus.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- ==================== VIEW B: RUANG UJIAN (Mengerjakan Ujian) ==================== -->
+                    <div id="viewContainer-ujian" class="dashboard-view hidden space-y-6">
+                        
+                        <!-- Ujian Setup & Info Screen -->
+                        <div id="examIntroCard" class="glass-card p-8 rounded-2xl border border-slate-200 dark:border-slate-800 text-center max-w-2xl mx-auto space-y-6">
+                            <div class="w-16 h-16 rounded-2xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 flex items-center justify-center text-3xl mx-auto shadow">
+                                <i class="fa-solid fa-file-signature"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">Ujian UTS / UAS Campuran</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Siswa SMP - Kurikulum Merdeka Terbaru 2026</p>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4 py-4 border-y border-slate-200 dark:border-slate-800">
+                                <div>
+                                    <span class="block text-[10px] text-slate-400 uppercase font-bold">Total Soal</span>
+                                    <span class="block text-base font-extrabold text-slate-800 dark:text-white mt-1">50 Butir</span>
+                                </div>
+                                <div>
+                                    <span class="block text-[10px] text-slate-400 uppercase font-bold">Durasi Ujian</span>
+                                    <span class="block text-base font-extrabold text-slate-800 dark:text-white mt-1">60 Menit</span>
+                                </div>
+                                <div>
+                                    <span class="block text-[10px] text-slate-400 uppercase font-bold">Mata Pelajaran</span>
+                                    <span class="block text-base font-extrabold text-indigo-500 mt-1">Campuran</span>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-800/80 text-left space-y-2">
+                                <h4 class="text-xs font-bold text-slate-900 dark:text-white">Peraturan Ruang Ujian:</h4>
+                                <ol class="text-xs text-slate-500 dark:text-slate-400 list-decimal list-inside space-y-1">
+                                    <li>Ujian bersifat mandiri dan tertutup.</li>
+                                    <li>Penyelesaian ujian akan mengirimkan total jawaban yang terisi secara otomatis jika waktu 60 menit berakhir.</li>
+                                    <li>Gunakan tombol navigasi soal untuk menandai jawaban yang ragu-ragu.</li>
+                                </ol>
+                            </div>
+
+                            <button onclick="startActualExam()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition shadow-lg shadow-indigo-600/20 text-sm">Mulai Kerjakan Ujian Sekarang</button>
+                        </div>
+
+                        <!-- Live Examination Panel (Hidden by default, shown during exam) -->
+                        <div id="examMainPanel" class="hidden grid grid-cols-1 lg:grid-cols-4 gap-6">
+                            
+                            <!-- Left: Active Question Panel -->
+                            <div class="lg:col-span-3 space-y-6">
+                                <!-- Info Header Bar -->
+                                <div class="glass-card p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between flex-wrap gap-3">
+                                    <div class="flex items-center gap-3">
+                                        <span class="px-3 py-1 bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 font-bold rounded-lg text-xs" id="activeSubjectIndicator">Matematika</span>
+                                        <span class="text-xs text-slate-400" id="currentMapelLabel">SMP Kurikulum Merdeka</span>
+                                    </div>
+                                    <!-- Countdown Timer UI -->
+                                    <div class="flex items-center gap-2 bg-rose-500/10 text-rose-600 px-4 py-1.5 rounded-lg border border-rose-200">
+                                        <i class="fa-solid fa-clock-rotate-left animate-spin text-xs"></i>
+                                        <span class="text-xs font-black tracking-wider" id="examCountdown">60:00</span>
+                                    </div>
+                                </div>
+
+                                <!-- Progress Bar -->
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between text-xs font-bold">
+                                        <span>Progres Soal Terjawab</span>
+                                        <span id="progressBarPercent">0%</span>
+                                    </div>
+                                    <div class="w-full h-3 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div id="progressBarFill" class="h-full bg-gradient-to-r from-indigo-500 to-indigo-700 transition-all duration-300" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Current Question Area -->
+                                <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-6">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <h3 class="text-base font-extrabold text-indigo-600 dark:text-indigo-400">PERTANYAAN <span id="questionNumberTitle">1</span> dari 50</h3>
+                                    </div>
+                                    <!-- Question Text -->
+                                    <p id="currentQuestionText" class="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-relaxed min-h-[60px]"></p>
+                                    
+                                    <!-- Answer Choices (Grid / Stack) -->
+                                    <div class="space-y-3" id="choicesContainer">
+                                        <!-- Will be dynamically injected by JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Navigation Bottom Controls -->
+                                <div class="flex items-center justify-between flex-wrap gap-3">
+                                    <button onclick="navigateQuestion(-1)" id="btnPrev" class="px-5 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-xl text-xs transition flex items-center gap-2">
+                                        <i class="fa-solid fa-chevron-left"></i> Sebelumnya
+                                    </button>
+                                    
+                                    <button onclick="navigateQuestion(1)" id="btnNext" class="px-5 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-xl text-xs transition flex items-center gap-2">
+                                        Selanjutnya <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+
+                                    <button onclick="confirmSubmitExam()" class="px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs transition shadow-lg shadow-rose-500/20 ml-auto">
+                                        Kirim Ujian Selesai <i class="fa-solid fa-circle-check ml-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Right: Navigation Grid Panel -->
+                            <div class="space-y-4">
+                                <div class="glass-card p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+                                    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                                        <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase">Navigasi Nomor</h4>
+                                        <span class="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full" id="answeredCountBadge">0 / 50</span>
+                                    </div>
+
+                                    <!-- Quick Help Info -->
+                                    <div class="flex items-center justify-between text-[10px] font-bold">
+                                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-indigo-600 rounded-sm"></span> Terisi</span>
+                                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-white border border-slate-300 rounded-sm"></span> Belum</span>
+                                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-amber-500 rounded-sm"></span> Aktif</span>
+                                    </div>
+
+                                    <!-- 50 Items Navigation Grid -->
+                                    <div class="grid grid-cols-5 gap-2 max-h-[250px] overflow-y-auto p-1" id="examNumbersGrid">
+                                        <!-- Dynamically generated 50 boxes -->
+                                    </div>
+                                </div>
+
+                                <!-- Security Integration Status -->
+                                <div class="glass-card p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-center space-y-1.5">
+                                    <span class="text-[10px] bg-indigo-500/10 text-indigo-500 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Security Active</span>
+                                    <p class="text-[10px] text-slate-400">Sistem memonitor aktivitas halaman demi integritas ujian Anda.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Examination Finished Modal Result Screen -->
+                        <div id="examResultCard" class="hidden glass-card p-8 rounded-2xl border border-slate-200 dark:border-slate-800 text-center max-w-xl mx-auto space-y-6">
+                            <div class="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white">Ujian Berhasil Dikirim!</h3>
+                                <p class="text-xs text-slate-400 mt-1">Evaluasi otomatis telah selesai diproses oleh sistem.</p>
+                            </div>
+
+                            <div class="p-6 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+                                <span class="block text-xs text-slate-400 uppercase font-semibold">Skor Nilai Hasil Ujian</span>
+                                <span id="examResultScore" class="block text-5xl font-black text-indigo-600 dark:text-indigo-400">85.0</span>
+                                <div class="flex items-center justify-center gap-3 text-xs mt-2 text-slate-500">
+                                    <span id="examResultCorrectCount">Terjawab Benar: 42 / 50</span>
+                                    <span>•</span>
+                                    <span id="examResultGrade">Predikat: Sangat Baik</span>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <button onclick="switchView('dashboard')" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition text-xs shadow-lg shadow-indigo-600/15">Kembali ke Dashboard</button>
+                                <button onclick="switchView('riwayat')" class="flex-1 py-3 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300 font-bold rounded-xl transition text-xs">Buka Riwayat Nilai</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- ==================== VIEW C: JADWAL UJIAN ==================== -->
+                    <div id="viewContainer-jadwal" class="dashboard-view hidden space-y-6">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-6">
+                            <div class="flex items-center justify-between flex-wrap gap-3">
+                                <div>
+                                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Kalender & Jadwal Pelaksanaan Ujian</h3>
+                                    <p class="text-[10px] text-slate-500 dark:text-slate-400">Simpan jadwal penting pengerjaan ujian Anda agar tidak tertinggal.</p>
+                                </div>
+                                <span class="text-xs bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 px-3 py-1 rounded-full font-bold">Tahun Akademik 2026/2027</span>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-slate-200 dark:border-slate-800 text-[10px] font-bold text-slate-400 uppercase">
+                                            <th class="py-4 px-3">Mata Pelajaran</th>
+                                            <th class="py-4 px-3">Pengajar / Guru</th>
+                                            <th class="py-4 px-3">Metode Ujian</th>
+                                            <th class="py-4 px-3">Sesi Waktu</th>
+                                            <th class="py-4 px-3 text-right">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80 text-xs text-slate-700 dark:text-slate-300">
+                                        <tr>
+                                            <td class="py-4 px-3">
+                                                <div class="flex items-center gap-3">
+                                                    <span class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center font-bold text-sm">MTK</span>
+                                                    <span class="font-bold text-slate-900 dark:text-white">Matematika</span>
+                                                </div>
+                                            </td>
+                                            <td class="py-4 px-3">Abu Bakar, S.Pd.</td>
+                                            <td class="py-4 px-3">Pilihan Ganda Campuran</td>
+                                            <td class="py-4 px-3 text-slate-500">60 Menit (Setiap Sesi)</td>
+                                            <td class="py-4 px-3 text-right">
+                                                <span class="inline-block px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold text-[10px]">TERBUKA</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-4 px-3">
+                                                <div class="flex items-center gap-3">
+                                                    <span class="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-500 flex items-center justify-center font-bold text-sm">ENG</span>
+                                                    <span class="font-bold text-slate-900 dark:text-white">Bahasa Inggris</span>
+                                                </div>
+                                            </td>
+                                            <td class="py-4 px-3">Hilda Rosyani, M.Hum.</td>
+                                            <td class="py-4 px-3">Pilihan Ganda Campuran</td>
+                                            <td class="py-4 px-3 text-slate-500">60 Menit (Setiap Sesi)</td>
+                                            <td class="py-4 px-3 text-right">
+                                                <span class="inline-block px-2.5 py-1 rounded-md bg-teal-500/10 text-teal-600 dark:text-teal-400 font-bold text-[10px]">TERBUKA</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-4 px-3">
+                                                <div class="flex items-center gap-3">
+                                                    <span class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-500 flex items-center justify-center font-bold text-sm">IND</span>
+                                                    <span class="font-bold text-slate-900 dark:text-white">Bahasa Indonesia</span>
+                                                </div>
+                                            </td>
+                                            <td class="py-4 px-3">Gultom Habsyi, M.Pd.</td>
+                                            <td class="py-4 px-3">Pilihan Ganda Campuran</td>
+                                            <td class="py-4 px-3 text-slate-500">60 Menit (Setiap Sesi)</td>
+                                            <td class="py-4 px-3 text-right">
+                                                <span class="inline-block px-2.5 py-1 rounded-md bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold text-[10px]">TERBUKA</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- ==================== VIEW D: RIWAYAT NILAI ==================== -->
+                    <div id="viewContainer-riwayat" class="dashboard-view hidden space-y-6">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-6">
+                            <div class="flex items-center justify-between flex-wrap gap-3">
+                                <div>
+                                    <h3 class="text-base font-bold text-slate-900 dark:text-white">Riwayat Hasil Pengerjaan Ujian</h3>
+                                    <p class="text-[10px] text-slate-500 dark:text-slate-400">Seluruh berkas nilai hasil ujian Anda yang tersimpan di dalam sistem cloud.</p>
+                                </div>
+                                <button onclick="clearRiwayat()" class="text-xs bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 px-3.5 py-2 rounded-xl transition font-semibold">
+                                    Hapus Riwayat
+                                </button>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-slate-200 dark:border-slate-800 text-[10px] font-bold text-slate-400 uppercase">
+                                            <th class="py-4 px-3">Nama Sesi</th>
+                                            <th class="py-4 px-3">Tanggal Diserahkan</th>
+                                            <th class="py-4 px-3">Jumlah Benar</th>
+                                            <th class="py-4 px-3">Skor Akhir</th>
+                                            <th class="py-4 px-3 text-right">Hasil Kelulusan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="riwayatTableBody" class="divide-y divide-slate-100 dark:divide-slate-800/80 text-xs text-slate-700 dark:text-slate-300">
+                                        <!-- Will be dynamically injected by JS. Mock empty row initially -->
+                                        <tr>
+                                            <td colspan="5" class="py-8 text-center text-slate-400">Belum ada riwayat pengerjaan ujian. Mulai ujian untuk mengukur kemampuan akademis Anda.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </section>
+    </div>
+
+    <!-- ==================== PREMIUM EDIT PROFILE POPUP MODAL ==================== -->
+    <div id="editProfileModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+        <div class="w-full max-w-md glass-card rounded-2xl shadow-2xl p-6 border border-white/20 dark:border-slate-800 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3 mb-4">
+                <h3 class="text-sm font-bold text-slate-900 dark:text-white">Perbarui Informasi Profil Anda</h3>
+                <button onclick="closeEditProfileModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleProfileEditSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400 mb-1">Nama Lengkap</label>
+                    <input type="text" id="editFullName" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400 mb-1">Kelas (SMP)</label>
+                    <select id="editClass" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none">
+                        <option value="VII-A">VII-A</option>
+                        <option value="VII-B">VII-B</option>
+                        <option value="VIII-A">VIII-A</option>
+                        <option value="VIII-B">VIII-B</option>
+                        <option value="IX-A">IX-A</option>
+                        <option value="IX-B">IX-B</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400 mb-1">File Foto Baru</label>
+                    <input type="file" id="editProfilePhoto" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-indigo-50 file:text-indigo-700">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-600 dark:text-slate-400 mb-1">Bio Singkat Anda</label>
+                    <textarea id="editBio" rows="2" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:outline-none"></textarea>
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closeEditProfileModal()" class="flex-1 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold text-xs transition">Batal</button>
+                    <button type="submit" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs transition">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== FACE ID SIMULATION MODAL (WEBCAM CAPTURE) ==================== -->
+    <div id="faceIDModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="w-full max-w-sm bg-slate-900 border border-slate-800 text-white rounded-2xl p-6 shadow-2xl relative text-center space-y-4">
+            <button onclick="stopFaceIDScan()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="inline-flex items-center justify-center w-12 h-12 bg-indigo-600/20 text-indigo-400 rounded-full mb-1">
+                <i class="fa-solid fa-face-viewfinder text-2xl"></i>
+            </div>
+            <h4 class="text-sm font-bold" id="faceIDModalTitle">Simulasi Pemindaian Face ID</h4>
+            <p class="text-[10px] text-slate-400">Harap sejajarkan wajah Anda pada area tangkapan video berikut untuk verifikasi biometrik.</p>
+
+            <!-- Video Area -->
+            <div class="relative w-full h-48 bg-black rounded-xl overflow-hidden border-2 border-indigo-500/50 flex items-center justify-center">
+                <video id="faceIDVideo" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100"></video>
+                <!-- HUD Overlays -->
+                <div class="absolute inset-4 border border-indigo-400/40 rounded-full pointer-events-none animate-pulse"></div>
+                <!-- Scanning Line animation -->
+                <div class="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-indigo-400 to-transparent shadow-[0_0_10px_#818cf8] animate-[bounce_2s_infinite]"></div>
+            </div>
+
+            <!-- Action Scanning Progress -->
+            <div id="faceIDScanStatusBox" class="p-3 rounded-lg bg-indigo-950/30 border border-indigo-900/50 text-[11px]">
+                <i class="fa-solid fa-circle-notch animate-spin mr-1.5 text-indigo-400"></i> Menghubungkan ke Web-Kamera...
+            </div>
+
+            <button id="btnCaptureFace" onclick="captureFaceAndProceed()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs transition">Konfirmasi Scan Wajah</button>
+        </div>
+    </div>
+
+
+    <!-- ==================== CUSTOMER SERVICE WHATSAPP FLOATING BUTTON ==================== -->
+    <a href="https://wa.me/6285691662664?text=Halo%20Admin%20Exam%20Portal%202026,%20saya%20butuh%20bantuan%20terkait%20ruang%20ujian." target="_blank" class="fixed bottom-6 right-6 z-40 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-transform hover:scale-110 active:scale-95 duration-200 group">
+        <span class="absolute right-16 bg-slate-900 text-white text-[10px] font-bold py-1 px-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition duration-200 shadow whitespace-nowrap pointer-events-none">Hubungi CS WhatsApp</span>
+        <i class="fa-brands fa-whatsapp text-3xl"></i>
+    </a>
+
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        /* Database & State Initialization */
+        const APP_DB_KEY_ADMIN = 'exam_portal_admins';
+        const APP_DB_KEY_USER = 'exam_portal_users';
+        const APP_DB_KEY_LOGGED_IN = 'exam_portal_logged';
+        const APP_DB_KEY_EXAM_HISTORY = 'exam_portal_history';
+
+        // Default credentials for Admin
+        const defaultAdmin = {
+            username: 'adminexam2026',
+            password: 'adminexam2026',
+            fullName: 'Administrator Utama',
+            role: 'Admin Utama',
+            bio: 'Pengelola teknis portal evaluasi SMP 2026.',
+            photo: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&fit=crop'
+        };
+
+        // Initialize LocalStorage Data
+        if (!localStorage.getItem(APP_DB_KEY_ADMIN)) {
+            localStorage.setItem(APP_DB_KEY_ADMIN, JSON.stringify([defaultAdmin]));
+        }
+        if (!localStorage.getItem(APP_DB_KEY_USER)) {
+            // Seed a mock default user for quick preview/login
+            const defaultUser = {
+                email: 'siswa@sekolah.sch.id',
+                password: 'siswa',
+                fullName: 'Andi Saputra',
+                studentClass: 'VII-A',
+                bio: 'Saya siap mengikuti evaluasi belajar.',
+                photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&fit=crop',
+                hasFaceID: true
+            };
+            localStorage.setItem(APP_DB_KEY_USER, JSON.stringify([defaultUser]));
+        }
+
+        let currentUser = null; // Tracks current logged-in user object
+        let currentAuthTab = 'user-login'; // user-login, admin-login, register
+        let cameraStream = null; // Holds webcam media stream
+        let activeFaceScanType = ''; // 'login' or 'register'
+        let faceScanFinished = false;
+
+        // Exam State Variables
+        let examStarted = false;
+        let examQuestions = [];
+        let userAnswers = {}; // Map of { questionIndex: selectedChoiceIndex }
+        let currentQuestionIdx = 0;
+        let examTimerInterval = null;
+        let examTimeLeftSeconds = 3600; // 60:00
+
+        /* Pre-flight loading Screen trigger */
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('loading-finished');
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 500);
+            }, 1000);
+
+            // Check if user session already exists
+            const savedSession = localStorage.getItem(APP_DB_KEY_LOGGED_IN);
+            if (savedSession) {
+                currentUser = JSON.parse(savedSession);
+                showPortalDashboard();
+            } else {
+                showAuthScreen();
+            }
+
+            // Sync color themes initially
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').className = 'fa-solid fa-sun text-lg';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIcon').className = 'fa-solid fa-moon text-lg';
+            }
+
+            // Build exam questions list
+            generateSMPQuestions();
+        };
+
+        /* UI Utilities */
+        function showNotification(title, message, isError = false) {
+            const notif = document.getElementById('notification');
+            const icon = document.getElementById('notifIcon');
+            const titleEl = document.getElementById('notifTitle');
+            const msgEl = document.getElementById('notifMessage');
+
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+
+            if (isError) {
+                notif.className = "fixed top-5 right-5 z-50 transform transition-transform duration-300 ease-out flex items-center gap-3 p-4 rounded-xl shadow-2xl glass-card max-w-sm border-l-4 border-rose-500";
+                icon.className = "text-rose-500 text-xl";
+                icon.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i>';
+            } else {
+                notif.className = "fixed top-5 right-5 z-50 transform transition-transform duration-300 ease-out flex items-center gap-3 p-4 rounded-xl shadow-2xl glass-card max-w-sm border-l-4 border-indigo-500";
+                icon.className = "text-indigo-500 text-xl";
+                icon.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+            }
+
+            notif.classList.remove('translate-x-full');
+            setTimeout(() => {
+                hideNotification();
+            }, 4000);
+        }
+
+        function hideNotification() {
+            document.getElementById('notification').classList.add('translate-x-full');
+        }
+
+        function showSystemNotif() {
+            showNotification("Sistem Portal Aktif", "Selamat menggunakan sistem portal evaluasi Premium. Semua modul bekerja optimal.", false);
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.theme = 'light';
+                icon.className = 'fa-solid fa-moon text-lg';
+            } else {
+                html.classList.add('dark');
+                localStorage.theme = 'dark';
+                icon.className = 'fa-solid fa-sun text-lg';
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+            }
+        }
+
+        function toggleProfileDropdown() {
+            const dd = document.getElementById('profileDropdown');
+            dd.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(e) {
+            const parent = document.getElementById('profileDropdownParent');
+            const dd = document.getElementById('profileDropdown');
+            if (parent && !parent.contains(e.target)) {
+                dd.classList.add('hidden');
+            }
+        });
+
+        /* Authentication View Controls */
+        function showAuthScreen() {
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('portalSection').classList.add('hidden');
+        }
+
+        function switchAuthTab(tabName) {
+            currentAuthTab = tabName;
+            
+            // Set normal/active styling on buttons
+            const tabs = {
+                'user-login': { btn: 'tabUserLogin', form: 'formUserLogin' },
+                'admin-login': { btn: 'tabAdminLogin', form: 'formAdminLogin' },
+                'register': { btn: 'tabRegister', form: 'formRegister' }
+            };
+
+            for (const key in tabs) {
+                const item = tabs[key];
+                const btnEl = document.getElementById(item.btn);
+                const formEl = document.getElementById(item.form);
+
+                if (key === tabName) {
+                    btnEl.className = "flex-1 py-2.5 text-xs font-semibold rounded-lg transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm";
+                    formEl.classList.remove('hidden');
+                } else {
+                    btnEl.className = "flex-1 py-2.5 text-xs font-semibold rounded-lg transition-all duration-200 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+                    formEl.classList.add('hidden');
+                }
+            }
+        }
+
+        /* Register Process */
+        function handleUserRegister(e) {
+            e.preventDefault();
+            const fullName = document.getElementById('regFullName').value.trim();
+            const studentClass = document.getElementById('regClass').value;
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const bio = document.getElementById('regBio').value.trim() || 'Aspirant Siswa di Portal Premium.';
+            const imageFile = document.getElementById('regProfileImage').files[0];
+
+            let users = JSON.parse(localStorage.getItem(APP_DB_KEY_USER)) || [];
+
+            // Email check
+            if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                showNotification("Pendaftaran Gagal", "Alamat email tersebut sudah terdaftar pada portal ini.", true);
+                return;
+            }
+
+            const registerAccount = (photoUrl) => {
+                const newUser = {
+                    email,
+                    password,
+                    fullName,
+                    studentClass,
+                    bio,
+                    photo: photoUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&fit=crop',
+                    hasFaceID: faceScanFinished
+                };
+
+                users.push(newUser);
+                localStorage.setItem(APP_DB_KEY_USER, JSON.stringify(users));
+
+                showNotification("Pendaftaran Berhasil", "Akun Anda terdaftar. Silakan login menggunakan kredensial baru Anda.", false);
+                switchAuthTab('user-login');
+                
+                // Clear Form
+                e.target.reset();
+                document.getElementById('faceIDRegStatus').textContent = "Opsional untuk Login Cepat";
+                faceScanFinished = false;
+            };
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    registerAccount(reader.result);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                registerAccount(null);
+            }
+        }
+
+        /* Login Processes */
+        function handleUserLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginUserEmail').value.trim();
+            const pass = document.getElementById('loginUserPassword').value;
+
+            const users = JSON.parse(localStorage.getItem(APP_DB_KEY_USER)) || [];
+            const matchedUser = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === pass);
+
+            if (matchedUser) {
+                currentUser = matchedUser;
+                localStorage.setItem(APP_DB_KEY_LOGGED_IN, JSON.stringify(currentUser));
+                showNotification("Masuk Berhasil", `Selamat belajar kembali, ${currentUser.fullName}!`, false);
+                showPortalDashboard();
+            } else {
+                showNotification("Gagal Masuk", "Email atau kata sandi tidak cocok. Periksa kembali entri Anda.", true);
+            }
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginAdminUser').value.trim();
+            const pass = document.getElementById('loginAdminPassword').value;
+
+            const admins = JSON.parse(localStorage.getItem(APP_DB_KEY_ADMIN)) || [];
+            const matchedAdmin = admins.find(a => a.username.toLowerCase() === username.toLowerCase() && a.password === pass);
+
+            if (matchedAdmin) {
+                currentUser = {
+                    email: username + '@admin.sch.id',
+                    fullName: matchedAdmin.fullName,
+                    studentClass: matchedAdmin.role,
+                    bio: matchedAdmin.bio,
+                    photo: matchedAdmin.photo || 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&fit=crop',
+                    isAdmin: true
+                };
+                localStorage.setItem(APP_DB_KEY_LOGGED_IN, JSON.stringify(currentUser));
+                showNotification("Masuk Admin Berhasil", "Sistem admin berhasil diautentikasi dengan aman.", false);
+                showPortalDashboard();
+            } else {
+                showNotification("Gagal Masuk", "Akses administratif ditolak. Data autentikasi salah.", true);
+            }
+        }
+
+        // Simulate OAuth with Google
+        function handleGoogleOAuth(type) {
+            showNotification("Google OAuth Simulasi", "Berhasil menyambungkan ke Google Account. Mengisi isian default otomatis.", false);
+            if (type === 'admin') {
+                document.getElementById('loginAdminUser').value = "adminexam2026";
+                document.getElementById('loginAdminPassword').value = "adminexam2026";
+            } else {
+                if (currentAuthTab === 'register') {
+                    document.getElementById('regFullName').value = "Budi Santoso Google";
+                    document.getElementById('regEmail').value = "budigoogle@gmail.com";
+                    document.getElementById('regPassword').value = "googlepass123";
+                    document.getElementById('regBio').value = "Terhubung dengan aman via Google Authentication.";
+                } else {
+                    document.getElementById('loginUserEmail').value = "siswa@sekolah.sch.id";
+                    document.getElementById('loginUserPassword').value = "siswa";
+                }
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem(APP_DB_KEY_LOGGED_IN);
+            currentUser = null;
+            
+            // Stop exam loops if active
+            if (examTimerInterval) clearInterval(examTimerInterval);
+            examStarted = false;
+
+            showNotification("Keluar Sesi", "Sesi login Anda berhasil diakhiri.", false);
+            showAuthScreen();
+            
+            // Reset portal screens
+            switchView('dashboard');
+            document.getElementById('examMainPanel').classList.add('hidden');
+            document.getElementById('examIntroCard').classList.remove('hidden');
+            document.getElementById('examResultCard').classList.add('hidden');
+        }
+
+        /* Face ID Camera Integration with Web MediaDevices */
+        function startFaceIDScan(type) {
+            activeFaceScanType = type;
+            const video = document.getElementById('faceIDVideo');
+            const statusBox = document.getElementById('faceIDScanStatusBox');
+            
+            document.getElementById('faceIDModal').classList.remove('hidden');
+            statusBox.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin mr-1.5 text-indigo-400"></i> Menghubungkan kamera perangkat Anda...';
+
+            // Request Camera Media
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+                .then(stream => {
+                    cameraStream = stream;
+                    video.srcObject = stream;
+                    statusBox.innerHTML = '<i class="fa-solid fa-video text-emerald-500 mr-1.5 animate-pulse"></i> Kamera siap. Harap arahkan pandangan Anda lurus ke depan.';
+                })
+                .catch(err => {
+                    console.error("Gagal mengakses kamera:", err);
+                    statusBox.innerHTML = '<i class="fa-solid fa-video-slash text-rose-500 mr-1.5"></i> Perangkat Kamera tidak ditemukan atau izin ditolak.';
+                });
+        }
+
+        function stopFaceIDScan() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            document.getElementById('faceIDModal').classList.add('hidden');
+        }
+
+        function captureFaceAndProceed() {
+            if (!cameraStream) {
+                showNotification("Gagal", "Kamera belum aktif atau tidak dapat diakses.", true);
+                return;
+            }
+
+            const statusBox = document.getElementById('faceIDScanStatusBox');
+            statusBox.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin mr-1.5 text-indigo-400"></i> Memetakan profil biometrik wajah Anda...';
+
+            setTimeout(() => {
+                if (activeFaceScanType === 'register') {
+                    faceScanFinished = true;
+                    document.getElementById('faceIDRegStatus').textContent = "✓ Terverifikasi dengan Aman";
+                    document.getElementById('faceIDRegStatus').className = "text-[10px] text-emerald-500 font-bold";
+                    showNotification("Face ID Berhasil", "Simulasi profil wajah berhasil dicatat.", false);
+                } else if (activeFaceScanType === 'login') {
+                    // Quick login mock logic
+                    const emailInput = document.getElementById('loginUserEmail').value.trim();
+                    const users = JSON.parse(localStorage.getItem(APP_DB_KEY_USER)) || [];
+                    
+                    let targetUser = null;
+                    if (emailInput) {
+                        targetUser = users.find(u => u.email.toLowerCase() === emailInput.toLowerCase());
+                    } else {
+                        // Default to the first user for quick testing if no email entered
+                        targetUser = users[0];
+                    }
+
+                    if (targetUser) {
+                        currentUser = targetUser;
+                        localStorage.setItem(APP_DB_KEY_LOGGED_IN, JSON.stringify(currentUser));
+                        showNotification("Face ID Berhasil", `Selamat datang kembali, ${currentUser.fullName}!`, false);
+                        showPortalDashboard();
+                    } else {
+                        showNotification("Siswa tidak ditemukan", "Harap masukkan alamat email Anda terlebih dahulu sebelum memindai wajah.", true);
+                    }
+                }
+                stopFaceIDScan();
+            }, 1500);
+        }
+
+        /* Portal Dashboard Integration */
+        function showPortalDashboard() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('portalSection').classList.remove('hidden');
+
+            updateUIFromUserData();
+            updateStatistics();
+            renderRiwayatTable();
+        }
+
+        function updateUIFromUserData() {
+            if (!currentUser) return;
+
+            // Sidebar
+            document.getElementById('sidebarUserPhoto').src = currentUser.photo;
+            document.getElementById('sidebarUserName').textContent = currentUser.fullName;
+            document.getElementById('sidebarUserRole').textContent = currentUser.isAdmin ? "Akses: Admin Utama" : `Siswa • ${currentUser.studentClass}`;
+
+            // Top Header Nav
+            document.getElementById('headerUserPhoto').src = currentUser.photo;
+            document.getElementById('headerUserName').textContent = currentUser.fullName;
+            
+            // Dropdown
+            document.getElementById('ddUserName').textContent = currentUser.fullName;
+            document.getElementById('ddUserEmail').textContent = currentUser.email;
+
+            // Profile detail in dashboard main view
+            document.getElementById('profileDetailPhoto').src = currentUser.photo;
+            document.getElementById('profileDetailName').textContent = currentUser.fullName;
+            document.getElementById('profileDetailClass').textContent = `Kelas ${currentUser.studentClass}`;
+            document.getElementById('profileDetailEmail').textContent = currentUser.email;
+            document.getElementById('profileDetailBio').textContent = `"${currentUser.bio}"`;
+        }
+
+        /* Edit Profile Pop-up Modal */
+        function openEditProfileModal() {
+            if (!currentUser) return;
+            document.getElementById('editFullName').value = currentUser.fullName;
+            document.getElementById('editClass').value = currentUser.studentClass || "VII-A";
+            document.getElementById('editBio').value = currentUser.bio || "";
+            document.getElementById('editProfileModal').classList.remove('hidden');
+        }
+
+        function closeEditProfileModal() {
+            document.getElementById('editProfileModal').classList.add('hidden');
+        }
+
+        function handleProfileEditSubmit(e) {
+            e.preventDefault();
+            const fullName = document.getElementById('editFullName').value.trim();
+            const studentClass = document.getElementById('editClass').value;
+            const bio = document.getElementById('editBio').value.trim();
+            const photoFile = document.getElementById('editProfilePhoto').files[0];
+
+            const executeUpdate = (newPhotoUrl) => {
+                currentUser.fullName = fullName;
+                currentUser.studentClass = studentClass;
+                currentUser.bio = bio;
+                if (newPhotoUrl) currentUser.photo = newPhotoUrl;
+
+                // Sync with DB
+                if (currentUser.isAdmin) {
+                    let admins = JSON.parse(localStorage.getItem(APP_DB_KEY_ADMIN)) || [];
+                    const idx = admins.findIndex(a => a.username + '@admin.sch.id' === currentUser.email);
+                    if (idx !== -1) {
+                        admins[idx].fullName = fullName;
+                        admins[idx].bio = bio;
+                        if (newPhotoUrl) admins[idx].photo = newPhotoUrl;
+                        localStorage.setItem(APP_DB_KEY_ADMIN, JSON.stringify(admins));
+                    }
+                } else {
+                    let users = JSON.parse(localStorage.getItem(APP_DB_KEY_USER)) || [];
+                    const idx = users.findIndex(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
+                    if (idx !== -1) {
+                        users[idx].fullName = fullName;
+                        users[idx].studentClass = studentClass;
+                        users[idx].bio = bio;
+                        if (newPhotoUrl) users[idx].photo = newPhotoUrl;
+                        localStorage.setItem(APP_DB_KEY_USER, JSON.stringify(users));
+                    }
+                }
+
+                // Update active session
+                localStorage.setItem(APP_DB_KEY_LOGGED_IN, JSON.stringify(currentUser));
+                updateUIFromUserData();
+                closeEditProfileModal();
+                showNotification("Profil Diperbarui", "Perubahan detail profil Anda berhasil disimpan secara aman.", false);
+            };
+
+            if (photoFile) {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    executeUpdate(reader.result);
+                };
+                reader.readAsDataURL(photoFile);
+            } else {
+                executeUpdate(null);
+            }
+        }
+
+        /* View Router Switcher */
+        function switchView(viewName) {
+            // Close responsive sidebar automatically if open
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+
+            // Hide all view containers
+            const views = ['dashboard', 'ujian', 'jadwal', 'riwayat'];
+            views.forEach(v => {
+                const el = document.getElementById(`viewContainer-${v}`);
+                if (el) el.classList.add('hidden');
+
+                const navEl = document.getElementById(`nav-${v}`);
+                if (navEl) {
+                    navEl.className = "w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition text-slate-400 hover:bg-slate-800 hover:text-white";
+                }
+            });
+
+            // Show selected view container
+            const activeView = document.getElementById(`viewContainer-${viewName}`);
+            if (activeView) activeView.classList.remove('hidden');
+
+            // Set active navigation button class
+            const activeNav = document.getElementById(`nav-${viewName}`);
+            if (activeNav) {
+                activeNav.className = "w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/15";
+            }
+
+            // Set Header Title
+            const titles = {
+                'dashboard': 'Dashboard Utama',
+                'ujian': 'Ruang Ujian Terkendali',
+                'jadwal': 'Kalender & Jadwal Ujian',
+                'riwayat': 'Riwayat Hasil Nilai'
+            };
+            document.getElementById('viewTitle').textContent = titles[viewName] || 'Portal Siswa';
+        }
+
+
+        /* ==================== EXAM ENGINE LOGIC (50 SOAL JAVASCRIPT) ==================== */
+        function generateSMPQuestions() {
+            examQuestions = [
+                // 1-17 MATEMATIKA (SMP)
+                { q: "Hasil dari 5 + (-2) x 4 adalah...", a: ["-3", "3", "12", "-13"], c: 0 },
+                { q: "Hasil penjumlahan dari 3x - 5y dan 2x + 7y adalah...", a: ["5x + 12y", "5x + 2y", "x - 2y", "5x - 2y"], c: 1 },
+                { q: "Himpunan penyelesaian dari persamaan 3x - 4 = 11 adalah...", a: ["x = 5", "x = 3", "x = -5", "x = 4"], c: 0 },
+                { q: "Suatu segitiga memiliki alas 12 cm dan tinggi 8 cm. Luas segitiga tersebut adalah...", a: ["96 cm²", "48 cm²", "24 cm²", "40 cm²"], c: 1 },
+                { q: "Bentuk paling sederhana dari perbandingan 40 : 60 adalah...", a: ["1 : 3", "2 : 3", "3 : 4", "4 : 6"], c: 1 },
+                { q: "Berapakah nilai akar kuadrat dari 225?", a: ["12", "13", "14", "15"], c: 3 },
+                { q: "Keliling dari lingkaran dengan diameter 14 cm adalah... (π = 22/7)", a: ["44 cm", "88 cm", "154 cm", "22 cm"], c: 0 },
+                { q: "Jika harga 5 buku adalah Rp 15.000, maka harga 8 buku sejenis adalah...", a: ["Rp 20.000", "Rp 24.000", "Rp 22.000", "Rp 28.000"], c: 1 },
+                { q: "Gradien garis yang melalui titik pusat (0,0) dan titik (3,6) adalah...", a: ["1/2", "3", "2", "-2"], c: 2 },
+                { q: "Banyak titik sudut pada prisma segi-5 adalah...", a: ["10", "12", "5", "15"], c: 0 },
+                { q: "Modus dari data: 6, 7, 8, 6, 9, 6, 7, 8, 5 adalah...", a: ["5", "6", "7", "8"], c: 1 },
+                { q: "Dari 40 siswa, 25 gemar Matematika, 20 gemar IPA, dan 10 gemar keduanya. Banyak siswa yang tidak gemar keduanya adalah...", a: ["5 siswa", "10 siswa", "15 siswa", "8 siswa"], c: 0 },
+                { q: "Sebuah dadu dilempar sekali. Peluang muncul mata dadu prima adalah...", a: ["1/6", "1/3", "1/2", "2/3"], c: 2 },
+                { q: "Nilai dari 2 pangkat 5 adalah...", a: ["10", "16", "32", "64"], c: 2 },
+                { q: "Volume kubus dengan panjang rusuk 5 cm adalah...", a: ["25 cm³", "75 cm³", "100 cm³", "125 cm³"], c: 3 },
+                { q: "Berapakah himpunan faktor dari angka 12?", a: ["{1,2,3,4,6,12}", "{2,3,4,6}", "{1,2,4,6,12}", "{1,3,4,12}"], c: 0 },
+                { q: "Sebuah mobil menempuh jarak 120 km dalam waktu 2 jam. Kecepatan rata-rata mobil tersebut adalah...", a: ["50 km/jam", "60 km/jam", "70 km/jam", "80 km/jam"], c: 1 },
+
+                // 18-33 BAHASA INGGRIS (SMP)
+                { q: "Choose the correct greeting for someone you meet for the first time:", a: ["Good bye!", "How do you do?", "What's up buddy?", "See you later!"], c: 1 },
+                { q: "Fill in the blank: She _______ to school by bus every day.", a: ["go", "goes", "going", "went"], c: 1 },
+                { q: "What is the synonym of the word 'Smart'?", a: ["Clever", "Dull", "Slow", "Lazy"], c: 0 },
+                { q: "Which word is an adjective?", a: ["Run", "Beautiful", "Quickly", "Happiness"], c: 1 },
+                { q: "Identify the simple past tense form of 'write':", a: ["writes", "writing", "wrote", "written"], c: 2 },
+                { q: "Arrange the words into a good sentence: 'always / he / his / does / homework'.", a: ["He does always his homework.", "He always does his homework.", "Always he does his homework.", "Does he always his homework."], c: 1 },
+                { q: "What is the English of 'Perpustakaan'?", a: ["Laboratory", "Classroom", "Library", "Office"], c: 2 },
+                { q: "Fill in the blank: Look! The birds are _______ in the sky.", a: ["fly", "flying", "flew", "flown"], c: 1 },
+                { q: "Identify the plural noun in this list:", a: ["Child", "Foot", "Children", "Tooth"], c: 2 },
+                { q: "Choose the correct preposition: My sister was born _______ August.", a: ["on", "at", "in", "by"], c: 2 },
+                { q: "Complete this dialog: 'Thank you very much for your help!' - '______.'", a: ["You're welcome", "Never mind", "No problem at all", "Forget it"], c: 0 },
+                { q: "What is the opposite of 'Cheap'?", a: ["Expensive", "Large", "Easy", "Heavy"], c: 0 },
+                { q: "Fill in the blank: This is _______ interesting story I have ever read.", a: ["a", "an", "the", "some"], c: 2 },
+                { q: "Which of the following is an expression of giving opinion?", a: ["I am sorry to hear that", "I think we should study together", "Congratulations!", "Pardon me?"], c: 1 },
+                { q: "What is the past form of the verb 'go'?", a: ["going", "gone", "goes", "went"], c: 3 },
+                { q: "Which sentence shows a prohibition?", a: ["You must study hard.", "Do not step on the grass!", "Can I help you?", "Please enter the room."], c: 1 },
+
+                // 34-50 BAHASA INDONESIA (SMP)
+                { q: "Di bawah ini yang merupakan kalimat retoris adalah...", a: ["Apakah kita ingin hidup sengsara selamanya?", "Kapan pameran sekolah dimulai?", "Siapa yang membawa kamus ini?", "Mengapa ia tidak masuk sekolah hari ini?"], c: 0 },
+                { q: "Unsur intrinsik sebuah cerita pendek yang berisi petunjuk waktu, tempat, dan suasana cerita disebut...", a: ["Tema", "Latar / Setting", "Alur / Plot", "Penokohan"], c: 1 },
+                { q: "Kalimat berikut yang menggunakan ejaan bahasa Indonesia secara baku dan benar adalah...", a: ["Saya membeli apotik di obor.", "Aktivitas belajar mengajar berjalan lancar.", "Ujian praktek olahraga dilaksanakan besok.", "Ibu membeli buah-buahan di khalayak ramai."], c: 1 },
+                { q: "Gagasan pokok atau ide dasar yang melandasi sebuah paragraf disebut...", a: ["Kalimat penjelas", "Ide pokok / Pikiran utama", "Simpulan", "Tema karangan"], c: 1 },
+                { q: "Sinonim dari kata 'Efisien' adalah...", a: ["Hemat", "Tepat guna", "Cepat lambat", "Boros"], c: 1 },
+                { q: "Laporan yang ditulis berdasarkan hasil pengamatan langsung pada objek tertentu disebut...", a: ["Laporan Hasil Observasi", "Cerita Pendek", "Buku Harian", "Artikel Opini"], c: 0 },
+                { q: "Yang bukan termasuk jenis dongeng di bawah ini adalah...", a: ["Fabel", "Legenda", "Mitos", "Biografi"], c: 3 },
+                { q: "Kata berimbuhan yang menyatakan alat terdapat dalam kata...", a: ["Timbangan", "Gergaji", "Pelari", "Makanan"], c: 0 },
+                { q: "Majas yang membandingkan benda mati seolah-olah dapat berperilaku seperti manusia dinamakan...", a: ["Metafora", "Hiperbola", "Personifikasi", "Asosiasi"], c: 2 },
+                { q: "Latar tempat yang terdapat dalam cerita fabel biasanya bertemakan...", a: ["Hutan dan alam liar", "Ruang angkasa", "Kantor pemerintahan", "Sekolah perkotaan"], c: 0 },
+                { q: "Kalimat yang memerlukan objek dalam strukturnya disebut kalimat...", a: ["Kalimat aktif transitif", "Kalimat pasif", "Kalimat aktif intransitif", "Kalimat perintah"], c: 0 },
+                { q: "Antonim dari kata 'Konstruktif' adalah...", a: ["Membangun", "Merusak / Destruktif", "Berdaya guna", "Mendukung"], c: 1 },
+                { q: "Bagian pembuka dalam sebuah struktur teks ulasan novel atau film dinamakan...", a: ["Evaluasi", "Orientasi", "Tafsiran", "Rangkuman"], c: 1 },
+                { q: "Kata penghubung (konjungsi) yang menyatakan hubungan sebab-akibat adalah...", a: ["Karena / Sehingga", "Lalu / Kemudian", "Dan / Serta", "Tetapi / Melainkan"], c: 0 },
+                { q: "Karangan fiksi biasanya ditulis menggunakan gaya bahasa...", a: ["Konotatif / Kiasan", "Denotatif / Sebenarnya", "Kaku", "Sangat Formal ilmiah"], c: 0 },
+                { q: "Kalimat yang berisi gagasan pembicara yang secara langsung diucapkan kepada orang lain dinamakan...", a: ["Kalimat langsung", "Kalimat tidak langsung", "Kalimat pasif", "Kalimat perintah"], c: 0 },
+                { q: "Penggunaan tanda baca yang tepat di bawah ini adalah...", a: ["Andi membeli: buku, pena dan pensil.", "Ibu berkata: 'Ayo belajar!'", "Wah, indah sekali pemandangan ini!", "Dimana kamu tinggal."], c: 2 }
+            ];
+        }
+
+        /* Start actual Exam Session */
+        function startActualExam() {
+            if (!currentUser) {
+                showNotification("Akses Ditolak", "Harap masuk ke sistem terlebih dahulu.", true);
+                return;
+            }
+
+            examStarted = true;
+            userAnswers = {};
+            currentQuestionIdx = 0;
+            examTimeLeftSeconds = 3600; // Reset to 60 Minutes
+
+            // Interface Toggles
+            document.getElementById('examIntroCard').classList.add('hidden');
+            document.getElementById('examMainPanel').classList.remove('hidden');
+            document.getElementById('examResultCard').classList.add('hidden');
+
+            // Render First Question & Dynamic Sidebar Grid
+            renderQuestion();
+            renderExamNumbersGrid();
+            updateProgress();
+
+            // Run countdown clock interval
+            if (examTimerInterval) clearInterval(examTimerInterval);
+            examTimerInterval = setInterval(() => {
+                examTimeLeftSeconds--;
+                updateCountdownDisplay();
+
+                if (examTimeLeftSeconds <= 0) {
+                    clearInterval(examTimerInterval);
+                    autoSubmitExam();
+                }
+            }, 1000);
+
+            showNotification("Ujian Dimulai", "Selamat mengerjakan! Waktu pengerjaan Anda: 60:00 Menit.", false);
+        }
+
+        function updateCountdownDisplay() {
+            const minutes = Math.floor(examTimeLeftSeconds / 60);
+            const seconds = examTimeLeftSeconds % 60;
+            const displayStr = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('examCountdown').textContent = displayStr;
+
+            // Highlight Timer Red if less than 5 minutes left
+            if (examTimeLeftSeconds < 300) {
+                const timerBox = document.getElementById('examCountdown').parentElement;
+                timerBox.className = "flex items-center gap-2 bg-rose-600 text-white px-4 py-1.5 rounded-lg border border-rose-700 animate-pulse";
+            }
+        }
+
+        /* Render Active Question UI */
+        function renderQuestion() {
+            if (currentQuestionIdx < 0 || currentQuestionIdx >= examQuestions.length) return;
+
+            const currentQ = examQuestions[currentQuestionIdx];
+
+            // Set Subject Meta info
+            let subject = "Bahasa Indonesia";
+            if (currentQuestionIdx < 17) {
+                subject = "Matematika";
+                document.getElementById('activeSubjectIndicator').className = "px-3 py-1 bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold rounded-lg text-xs";
+            } else if (currentQuestionIdx < 33) {
+                subject = "Bahasa Inggris";
+                document.getElementById('activeSubjectIndicator').className = "px-3 py-1 bg-teal-100 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 font-bold rounded-lg text-xs";
+            } else {
+                document.getElementById('activeSubjectIndicator').className = "px-3 py-1 bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-bold rounded-lg text-xs";
+            }
+            document.getElementById('activeSubjectIndicator').textContent = subject;
+
+            // Update Q Title & Text
+            document.getElementById('questionNumberTitle').textContent = currentQuestionIdx + 1;
+            document.getElementById('currentQuestionText').textContent = currentQ.q;
+
+            // Render Choice Options
+            const choicesContainer = document.getElementById('choicesContainer');
+            choicesContainer.innerHTML = '';
+
+            const optionPrefix = ['A', 'B', 'C', 'D'];
+            currentQ.a.forEach((choice, idx) => {
+                const isSelected = userAnswers[currentQuestionIdx] === idx;
+                
+                const button = document.createElement('button');
+                button.onclick = () => selectChoice(idx);
+                button.className = isSelected 
+                    ? "w-full text-left p-4 rounded-xl border-2 border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/20 text-slate-900 dark:text-white font-bold transition flex items-center gap-4 shadow-sm"
+                    : "w-full text-left p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition flex items-center gap-4";
+
+                button.innerHTML = `
+                    <span class="${isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'} w-8 h-8 rounded-lg flex items-center justify-center font-extrabold text-xs transition-colors shrink-0">
+                        ${optionPrefix[idx]}
+                    </span>
+                    <span class="text-xs sm:text-sm font-medium leading-relaxed">${choice}</span>
+                `;
+                choicesContainer.appendChild(button);
+            });
+
+            // Adjust navigation button states
+            document.getElementById('btnPrev').disabled = currentQuestionIdx === 0;
+            document.getElementById('btnPrev').style.opacity = currentQuestionIdx === 0 ? '0.5' : '1';
+
+            document.getElementById('btnNext').disabled = currentQuestionIdx === examQuestions.length - 1;
+            document.getElementById('btnNext').style.opacity = currentQuestionIdx === examQuestions.length - 1 ? '0.5' : '1';
+
+            // Sync dynamic number highlighting
+            renderExamNumbersGrid();
+        }
+
+        function selectChoice(choiceIndex) {
+            userAnswers[currentQuestionIdx] = choiceIndex;
+            renderQuestion();
+            updateProgress();
+        }
+
+        function navigateQuestion(direction) {
+            const target = currentQuestionIdx + direction;
+            if (target >= 0 && target < examQuestions.length) {
+                currentQuestionIdx = target;
+                renderQuestion();
+            }
+        }
+
+        function jumpToQuestion(index) {
+            if (index >= 0 && index < examQuestions.length) {
+                currentQuestionIdx = index;
+                renderQuestion();
+            }
+        }
+
+        /* 50 Item Navigation Grid Render */
+        function renderExamNumbersGrid() {
+            const grid = document.getElementById('examNumbersGrid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < examQuestions.length; i++) {
+                const isAnswered = userAnswers[i] !== undefined;
+                const isActive = currentQuestionIdx === i;
+
+                const box = document.createElement('button');
+                box.onclick = () => jumpToQuestion(i);
+                
+                let baseClass = "h-10 text-xs font-bold rounded-lg flex items-center justify-center transition border ";
+                if (isActive) {
+                    baseClass += "bg-amber-500 border-amber-600 text-white shadow-md shadow-amber-500/10";
+                } else if (isAnswered) {
+                    baseClass += "bg-indigo-600 border-indigo-700 text-white";
+                } else {
+                    baseClass += "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
+                }
+
+                box.className = baseClass;
+                box.textContent = i + 1;
+                grid.appendChild(box);
+            }
+
+            // Update counter badge
+            const answeredCount = Object.keys(userAnswers).length;
+            document.getElementById('answeredCountBadge').textContent = `${answeredCount} / 50`;
+        }
+
+        function updateProgress() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const percentage = Math.round((answeredCount / examQuestions.length) * 100);
+            
+            document.getElementById('progressBarFill').style.width = `${percentage}%`;
+            document.getElementById('progressBarPercent').textContent = `${percentage}%`;
+        }
+
+        /* Submit Exam Processes */
+        function confirmSubmitExam() {
+            // Check if there are unanswered questions
+            const totalQuestions = examQuestions.length;
+            const answeredCount = Object.keys(userAnswers).length;
+            const unanswered = totalQuestions - answeredCount;
+
+            let promptMsg = `Apakah Anda yakin ingin menyerahkan ujian sekarang?`;
+            if (unanswered > 0) {
+                promptMsg = `Perhatian: Ada ${unanswered} soal yang BELUM terjawab. Apakah Anda yakin ingin menyerahkan berkas ujian Anda?`;
+            }
+
+            // Safe replacement for browser confirm modal: custom browser confirmation fallback style for iframe compatibility
+            const confirmed = window.confirm(promptMsg);
+            if (confirmed) {
+                processExamSubmission();
+            }
+        }
+
+        function autoSubmitExam() {
+            showNotification("Waktu Habis", "Waktu pengerjaan 60:00 menit habis. Jawaban dikirim otomatis.", true);
+            processExamSubmission();
+        }
+
+        function processExamSubmission() {
+            if (examTimerInterval) clearInterval(examTimerInterval);
+            examStarted = false;
+
+            // Calculate score
+            let correctCount = 0;
+            examQuestions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.c) {
+                    correctCount++;
+                }
+            });
+
+            const maxScore = 100;
+            const calculatedScore = (correctCount / examQuestions.length) * maxScore;
+            const finalScore = parseFloat(calculatedScore.toFixed(1));
+
+            // Grade Label
+            let grade = "Cukup";
+            if (finalScore >= 85) grade = "Sangat Baik";
+            else if (finalScore >= 70) grade = "Baik";
+            else if (finalScore >= 55) grade = "Cukup";
+            else grade = "Kurang";
+
+            // Save results to history localDB
+            let history = JSON.parse(localStorage.getItem(APP_DB_KEY_EXAM_HISTORY)) || [];
+            const newRecord = {
+                id: 'EXAM-' + Date.now(),
+                userEmail: currentUser.email,
+                userName: currentUser.fullName,
+                studentClass: currentUser.studentClass,
+                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                correctAnswers: `${correctCount} / ${examQuestions.length}`,
+                score: finalScore,
+                grade: grade
+            };
+            history.push(newRecord);
+            localStorage.setItem(APP_DB_KEY_EXAM_HISTORY, JSON.stringify(history));
+
+            // Display result panel cards
+            document.getElementById('examMainPanel').classList.add('hidden');
+            document.getElementById('examResultCard').classList.remove('hidden');
+
+            document.getElementById('examResultScore').textContent = finalScore;
+            document.getElementById('examResultCorrectCount').textContent = `Terjawab Benar: ${correctCount} / 50`;
+            document.getElementById('examResultGrade').textContent = `Predikat Kelulusan: ${grade}`;
+
+            // Reset view statistics and tables
+            updateStatistics();
+            renderRiwayatTable();
+        }
+
+        /* Statistics calculation */
+        function updateStatistics() {
+            let history = JSON.parse(localStorage.getItem(APP_DB_KEY_EXAM_HISTORY)) || [];
+            
+            // Filter by current active logged user email
+            if (currentUser) {
+                history = history.filter(h => h.userEmail.toLowerCase() === currentUser.email.toLowerCase());
+            }
+
+            const totalCompleted = history.length;
+            document.getElementById('statCompletedExams').textContent = `${totalCompleted} Ujian`;
+
+            if (totalCompleted > 0) {
+                const sum = history.reduce((acc, curr) => acc + curr.score, 0);
+                const avg = parseFloat((sum / totalCompleted).toFixed(1));
+                document.getElementById('statAverageScore').textContent = avg;
+            } else {
+                document.getElementById('statAverageScore').textContent = "0.0";
+            }
+        }
+
+        /* Render dynamic history table */
+        function renderRiwayatTable() {
+            let history = JSON.parse(localStorage.getItem(APP_DB_KEY_EXAM_HISTORY)) || [];
+            
+            // Filter by currentUser
+            if (currentUser) {
+                history = history.filter(h => h.userEmail.toLowerCase() === currentUser.email.toLowerCase());
+            }
+
+            const tbody = document.getElementById('riwayatTableBody');
+            tbody.innerHTML = '';
+
+            if (history.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-8 text-center text-slate-400">Belum ada riwayat pengerjaan ujian. Mulai ujian untuk mengukur kemampuan akademis Anda.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Render items in reverse order (newest first)
+            history.slice().reverse().forEach(record => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 dark:hover:bg-slate-900/40 transition";
+                
+                // Class color indicators for pass score
+                let scoreBadgeClass = "text-rose-500 font-bold";
+                let statusBadgeClass = "bg-rose-500/10 text-rose-600 dark:text-rose-400";
+                let statusText = "TIDAK LULUS";
+
+                if (record.score >= 70) {
+                    scoreBadgeClass = "text-emerald-500 font-bold";
+                    statusBadgeClass = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+                    statusText = "LULUS";
+                } else if (record.score >= 55) {
+                    scoreBadgeClass = "text-amber-500 font-bold";
+                    statusBadgeClass = "bg-amber-500/10 text-amber-600 dark:text-amber-400";
+                    statusText = "REMEDIAL";
+                }
+
+                tr.innerHTML = `
+                    <td class="py-4 px-3 font-semibold text-slate-950 dark:text-white">Ujian Campuran SMP (50 Soal)</td>
+                    <td class="py-4 px-3 text-slate-400">${record.date}</td>
+                    <td class="py-4 px-3">${record.correctAnswers}</td>
+                    <td class="py-4 px-3 ${scoreBadgeClass}">${record.score}</td>
+                    <td class="py-4 px-3 text-right">
+                        <span class="inline-block px-2.5 py-1 rounded-md ${statusBadgeClass} font-bold text-[10px]">${statusText}</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function clearRiwayat() {
+            if (window.confirm("Apakah Anda yakin ingin menghapus seluruh riwayat nilai Anda dari portal ini?")) {
+                localStorage.removeItem(APP_DB_KEY_EXAM_HISTORY);
+                updateStatistics();
+                renderRiwayatTable();
+                showNotification("Riwayat Dihapus", "Seluruh data nilai diatur ulang ke kondisi kosong.", false);
+            }
+        }
+    </script>
+</body>
+</html>
